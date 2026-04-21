@@ -857,8 +857,12 @@ function App() {
   return (
     <main className="min-h-screen bg-[#f4f4ef] text-[#1f2329]">
       <div className="mx-auto w-full max-w-[1920px]">
-        <SectionShell heightClass="h-[60px]">
-          <div className="relative z-[10000] flex h-full items-center justify-between overflow-visible">
+        <SectionShell heightClass="sticky top-0 z-[10050] h-[60px]">
+          <div className="relative isolate z-[10000] flex h-full items-center justify-between overflow-visible">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-0 -z-10 h-full w-screen -translate-x-1/2 bg-[#F0EFE7]"
+            />
             <img src={cozeLogo} alt="Coze" className="h-8 w-auto" />
 
             <div className="ml-auto flex items-center justify-end gap-6">
@@ -941,84 +945,90 @@ function App() {
           </div>
         </SectionShell>
 
-        <SectionShell heightClass="h-[800px]">
-          <div className="relative h-full">
+        <SectionShell heightClass="h-[calc(100svh-60px)] min-h-[800px]">
+          <div className="relative isolate h-full">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-0 -z-10 h-full w-screen -translate-x-1/2 bg-[#F0EFE7]"
+            />
             <img
               src={heroBottom}
               alt=""
               aria-hidden="true"
               className="pointer-events-none absolute bottom-0 left-1/2 z-0 w-[1920px] max-w-none -translate-x-1/2 select-none"
             />
-            <div className="relative z-10 mx-auto flex h-full max-w-[1328px] flex-col items-center pt-16">
-              <p className="font-cn-serif w-[420px] whitespace-nowrap text-left text-[44px] font-semibold leading-[56px] text-[#1f2329] max-md:w-auto max-md:text-center">
-                hello，Agent world
-              </p>
-              <div className="mt-6 flex items-center gap-8 max-md:flex-wrap max-md:justify-center">
-                <span className="font-cn-serif text-[68px] font-semibold leading-[64px] text-[#1f2329] max-md:text-[40px] max-md:leading-[42px]">
-                  满配就位
-                </span>
-                <span className="font-cn-serif text-[68px] font-semibold leading-[64px] text-[#1f2329] max-md:text-[40px] max-md:leading-[42px]">
-                  不止Claw
-                </span>
-              </div>
-              <div className="mt-12 flex w-full justify-center">
-                <div className="flex w-full max-w-[272px] items-center gap-4 overflow-visible">
-                  <div
-                    className={`min-w-0 ${ctaFlexTransitionClass} ${getInteractiveCtaFlexClass(activeHeroCta, 'hero-trial')}`}
-                    onMouseEnter={() => setActiveHeroCta('hero-trial')}
-                    onMouseLeave={() => setActiveHeroCta(null)}
-                  >
-                    <InteractiveCtaButton
-                      label="免费使用"
-                      labelClassName="font-['Helvetica','Arial',sans-serif]"
-                      variant="solid"
-                      paddingClassName="px-6 py-4"
-                      textClassName="text-[20px] font-medium leading-none"
-                      iconFill="#FFFFFF"
-                      href={getExternalLinkByName('扣子')}
-                      onFocus={() => setActiveHeroCta('hero-trial')}
-                      onBlur={() => setActiveHeroCta(null)}
-                    />
-                  </div>
-                  <div
-                    className={`group/hero-download relative z-40 min-w-0 ${ctaFlexTransitionClass} ${getInteractiveCtaFlexClass(activeHeroCta, 'hero-download')}`}
-                    onMouseEnter={() => setActiveHeroCta('hero-download')}
-                    onMouseLeave={() => setActiveHeroCta(null)}
-                  >
-                    <InteractiveCtaButton
-                      label="立即下载"
-                      buttonClassName="font-['Helvetica','Arial',sans-serif]"
-                      labelClassName="font-['Helvetica','Arial',sans-serif]"
-                      variant="outline"
-                      paddingClassName="px-6 py-4"
-                      textClassName="text-[20px] font-medium leading-none"
-                      iconFill="#1F2329"
-                      hoverIcon={<CtaDownloadHoverIcon stroke="#1F2329" />}
-                      onFocus={() => setActiveHeroCta('hero-download')}
-                      onBlur={() => setActiveHeroCta(null)}
-                    />
-                    <div className="pointer-events-none invisible absolute left-1/2 top-full z-40 mt-2 flex h-[208px] w-[176px] -translate-x-1/2 -translate-y-3 scale-[0.92] origin-top flex-col items-center gap-3 rounded-[8px] border border-[rgba(31,35,41,0.06)] bg-white p-2 opacity-0 shadow-[0_24px_48px_rgba(31,35,41,0.16),0_10px_24px_rgba(31,35,41,0.10)] transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/hero-download:pointer-events-auto group-hover/hero-download:visible group-hover/hero-download:translate-y-0 group-hover/hero-download:scale-100 group-hover/hero-download:opacity-100 group-focus-within/hero-download:pointer-events-auto group-focus-within/hero-download:visible group-focus-within/hero-download:translate-y-0 group-focus-within/hero-download:scale-100 group-focus-within/hero-download:opacity-100">
-                      <img
-                        src={heroDownloadQr}
-                        alt="扫码下载二维码"
-                        className="h-[160px] w-[160px] rounded-[6px] object-cover"
+            <div className="relative z-10 mx-auto flex h-full max-w-[1328px] flex-col items-center justify-between pt-12 pb-0">
+              <div className="flex flex-col items-center">
+                <p className="font-cn-serif w-[420px] whitespace-nowrap text-left text-[44px] font-semibold leading-[56px] text-[#1f2329] max-md:w-auto max-md:text-center">
+                  hello，Agent world
+                </p>
+                <div className="mt-6 flex items-center gap-8 max-md:flex-wrap max-md:justify-center">
+                  <span className="font-cn-serif text-[68px] font-semibold leading-[64px] text-[#1f2329] max-md:text-[40px] max-md:leading-[42px]">
+                    满配就位
+                  </span>
+                  <span className="font-cn-serif text-[68px] font-semibold leading-[64px] text-[#1f2329] max-md:text-[40px] max-md:leading-[42px]">
+                    不止Claw
+                  </span>
+                </div>
+                <div className="mt-12 flex w-full justify-center">
+                  <div className="flex w-full max-w-[272px] items-center gap-4 overflow-visible">
+                    <div
+                      className={`min-w-0 ${ctaFlexTransitionClass} ${getInteractiveCtaFlexClass(activeHeroCta, 'hero-trial')}`}
+                      onMouseEnter={() => setActiveHeroCta('hero-trial')}
+                      onMouseLeave={() => setActiveHeroCta(null)}
+                    >
+                      <InteractiveCtaButton
+                        label="免费使用"
+                        labelClassName="font-['Helvetica','Arial',sans-serif]"
+                        variant="solid"
+                        paddingClassName="px-6 py-4"
+                        textClassName="text-[20px] font-medium leading-none"
+                        iconFill="#FFFFFF"
+                        href={getExternalLinkByName('扣子')}
+                        onFocus={() => setActiveHeroCta('hero-trial')}
+                        onBlur={() => setActiveHeroCta(null)}
                       />
-                      <div className="flex items-center justify-center gap-2">
+                    </div>
+                    <div
+                      className={`group/hero-download relative z-40 min-w-0 ${ctaFlexTransitionClass} ${getInteractiveCtaFlexClass(activeHeroCta, 'hero-download')}`}
+                      onMouseEnter={() => setActiveHeroCta('hero-download')}
+                      onMouseLeave={() => setActiveHeroCta(null)}
+                    >
+                      <InteractiveCtaButton
+                        label="立即下载"
+                        buttonClassName="font-['Helvetica','Arial',sans-serif]"
+                        labelClassName="font-['Helvetica','Arial',sans-serif]"
+                        variant="outline"
+                        paddingClassName="px-6 py-4"
+                        textClassName="text-[20px] font-medium leading-none"
+                        iconFill="#1F2329"
+                        hoverIcon={<CtaDownloadHoverIcon stroke="#1F2329" />}
+                        onFocus={() => setActiveHeroCta('hero-download')}
+                        onBlur={() => setActiveHeroCta(null)}
+                      />
+                      <div className="pointer-events-none invisible absolute left-1/2 top-full z-40 mt-2 flex h-[208px] w-[176px] -translate-x-1/2 -translate-y-3 scale-[0.92] origin-top flex-col items-center gap-3 rounded-[8px] border border-[rgba(31,35,41,0.06)] bg-white p-2 opacity-0 shadow-[0_24px_48px_rgba(31,35,41,0.16),0_10px_24px_rgba(31,35,41,0.10)] transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/hero-download:pointer-events-auto group-hover/hero-download:visible group-hover/hero-download:translate-y-0 group-hover/hero-download:scale-100 group-hover/hero-download:opacity-100 group-focus-within/hero-download:pointer-events-auto group-focus-within/hero-download:visible group-focus-within/hero-download:translate-y-0 group-focus-within/hero-download:scale-100 group-focus-within/hero-download:opacity-100">
                         <img
-                          src={heroDownloadIcon}
-                          alt=""
-                          aria-hidden="true"
-                          className="h-5 w-5 shrink-0"
+                          src={heroDownloadQr}
+                          alt="扫码下载二维码"
+                          className="h-[160px] w-[160px] rounded-[6px] object-cover"
                         />
-                        <p className="text-center text-[14px] font-medium leading-5 text-[#1F2329]">
-                          扫码下载
-                        </p>
+                        <div className="flex items-center justify-center gap-2">
+                          <img
+                            src={heroDownloadIcon}
+                            alt=""
+                            aria-hidden="true"
+                            className="h-5 w-5 shrink-0"
+                          />
+                          <p className="text-center text-[14px] font-medium leading-5 text-[#1F2329]">
+                            扫码下载
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="relative mt-16 h-[430px] w-[764px] max-w-full rounded-[40px] border-[8px] border-[rgba(255,255,255,0.48)] shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
+              <div className="relative mt-6 h-[459px] w-[816px] max-w-full shrink-0 rounded-[40px] border-[8px] border-[rgba(255,255,255,0.48)] shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
                 <div className="relative h-full w-full overflow-hidden rounded-[32px] bg-[#0d1020]">
                   <img
                     src={heroPreview}
@@ -1316,7 +1326,7 @@ function App() {
                   aria-label="打开扣子罗盘"
                   onClick={handleModuleCardClick(getExternalLinkByName('扣子罗盘'))}
                   onKeyDown={handleModuleCardKeyDown(getExternalLinkByName('扣子罗盘'))}
-                  className="group relative h-[506px] w-full cursor-pointer overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f7f4eb_0%,#efede4_49%)] px-8 pt-9 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(141,99,70,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9C6D4C]/30 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent lg:w-[590px]"
+                  className="group relative h-[506px] w-full cursor-pointer overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f7f4eb_0%,#efede4_49%)] px-8 pt-9 transform-gpu transition-[transform,box-shadow] duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,box-shadow] hover:-translate-y-[3px] hover:shadow-[0_18px_42px_rgba(141,99,70,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9C6D4C]/30 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent lg:w-[590px]"
                 >
                 <div className="relative z-10">
                   <div className="max-w-[510px]">
@@ -1330,10 +1340,10 @@ function App() {
                     href={getExternalLinkByName('扣子罗盘')}
                     target="_blank"
                     rel="noreferrer"
-                    className="group mt-4 inline-flex items-center justify-center overflow-hidden whitespace-nowrap rounded-full bg-[#9c6d4c] px-4 py-3 text-[16px] font-medium leading-none text-white transition-[transform,background-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] hover:shadow-[0_10px_24px_rgba(141,99,70,0.2)]"
+                    className="group mt-4 inline-flex items-center justify-center overflow-hidden whitespace-nowrap rounded-full bg-[#9c6d4c] px-4 py-3 text-[16px] font-medium leading-none text-white transform-gpu transition-[transform,background-color,box-shadow] duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,box-shadow] hover:-translate-y-[1px] hover:shadow-[0_8px_20px_rgba(141,99,70,0.18)]"
                   >
                     <span className="text-[#FFFFFF]">立即体验</span>
-                    <span className="flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:ml-1 group-hover:w-4 group-hover:opacity-100">
+                    <span className="flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 transition-[width,margin,opacity] duration-[280ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:ml-1 group-hover:w-4 group-hover:opacity-100">
                       <svg
                         width="16"
                         height="16"
@@ -1359,26 +1369,26 @@ function App() {
                     <img
                       src={compassFrame}
                       alt=""
-                      className="absolute z-10 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      className="absolute z-10 transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-[-1px]"
                       style={{ left: '48px', top: '24px', width: '308px', height: '120px' }}
                     />
 
                     <img
                       src={compassDialFill}
                       alt=""
-                      className="absolute z-20 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px] group-hover:scale-[1.008]"
+                      className="absolute z-20 transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-[-1px] group-hover:scale-[1.006]"
                       style={{ left: '27.9px', top: '96.46px', width: '348px', height: '348px' }}
                     />
                     <img
                       src={compassDialRing}
                       alt=""
-                      className="absolute z-30 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-3px]"
+                      className="absolute z-30 transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-[-2px]"
                       style={{ left: '55.5px', top: '125.3px', width: '292px', height: '292px' }}
                     />
                     <img
                       src={compassTicksStrong}
                       alt=""
-                      className="absolute z-40 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-3px]"
+                      className="absolute z-40 transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-[-2px]"
                       style={{ left: '57.6px', top: '125.26px', width: '289.8px', height: '289.8px' }}
                     />
                     <div
@@ -1395,7 +1405,7 @@ function App() {
                         }}
                       />
                       <div
-                        className="absolute inset-0 origin-center rotate-[60deg] opacity-90 transition-[transform,clip-path,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] [clip-path:polygon(50%_50%,49%_0%,58%_1%,68%_5%,78%_12%,86%_22%,91%_34%,94%_46%,95%_56%,50%_50%)] group-hover:rotate-[-10deg] group-hover:opacity-100 group-hover:[clip-path:polygon(50%_50%,46%_0%,60%_1%,74%_6%,86%_15%,95%_28%,100%_43%,100%_57%,98%_68%,50%_50%)]"
+                        className="absolute inset-0 origin-center rotate-[60deg] opacity-90 transform-gpu transition-[transform,clip-path,opacity] duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,clip-path,opacity] [clip-path:polygon(50%_50%,49%_0%,58%_1%,68%_5%,78%_12%,86%_22%,91%_34%,94%_46%,95%_56%,50%_50%)] group-hover:rotate-[-10deg] group-hover:opacity-100 group-hover:[clip-path:polygon(50%_50%,46%_0%,60%_1%,74%_6%,86%_15%,95%_28%,100%_43%,100%_57%,98%_68%,50%_50%)]"
                         style={{
                           ...compassCircleMaskStyle,
                           background:
@@ -1406,43 +1416,43 @@ function App() {
                     <img
                       src={compassTicksLightOne}
                       alt=""
-                      className="absolute z-[35] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      className="absolute z-[35] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-[-1px]"
                       style={{ left: '45.85px', top: '113.21px', width: '313.31px', height: '313.31px' }}
                     />
                     <img
                       src={compassTicksLightTwo}
                       alt=""
-                      className="absolute z-[35] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      className="absolute z-[35] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-[-1px]"
                       style={{ left: '34.99px', top: '102.35px', width: '335.03px', height: '335.03px' }}
                     />
                     <img
                       src={compassTicksLightThree}
                       alt=""
-                      className="absolute z-[35] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      className="absolute z-[35] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-[-1px]"
                       style={{ left: '25.4px', top: '92.76px', width: '354.2px', height: '354.2px' }}
                     />
                     <img
                       src={compassTicksLightFour}
                       alt=""
-                      className="absolute z-[35] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      className="absolute z-[35] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-[-1px]"
                       style={{ left: '17.16px', top: '84.53px', width: '370.67px', height: '370.67px' }}
                     />
                     <img
                       src={compassTicksLightFive}
                       alt=""
-                      className="absolute z-[35] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      className="absolute z-[35] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-[-1px]"
                       style={{ left: '10.34px', top: '77.7px', width: '384.33px', height: '384.33px' }}
                     />
 
                     <img
                       src={compassNeedle}
                       alt=""
-                      className="absolute z-50 origin-[53.3%_49.7%] rotate-[60deg] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:rotate-[-10deg]"
+                      className="absolute z-50 origin-[53.3%_49.7%] rotate-[60deg] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:rotate-[-10deg]"
                       style={{ left: '123.65px', top: '197.23px', width: '159px', height: '141.03px' }}
                     />
 
                     <div
-                      className="absolute z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-6px] group-hover:scale-[1.02]"
+                      className="absolute z-[60] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-[-4px] group-hover:scale-[1.015]"
                       style={{ left: '165.9px', top: '-0.3px', width: '69px', height: '60.6px' }}
                     >
                       <img
@@ -1468,13 +1478,13 @@ function App() {
                     <img
                       src={compassPromptTag}
                       alt=""
-                      className="absolute z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-6px] group-hover:translate-y-[-4px]"
+                      className="absolute z-[60] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[-4px] group-hover:translate-y-[-3px]"
                       style={{ left: '-23px', top: '60px', width: '138px', height: '32px' }}
                     />
                     <img
                       src={compassCozeTag}
                       alt="扣子罗盘功能示意图"
-                      className="absolute z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[6px] group-hover:translate-y-[-4px]"
+                      className="absolute z-[60] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[4px] group-hover:translate-y-[-3px]"
                       style={{ left: '297px', top: '63px', width: '121px', height: '32px' }}
                     />
                   </div>
@@ -1496,7 +1506,7 @@ function App() {
                   aria-label="打开扣子企业版"
                   onClick={handleModuleCardClick(getExternalLinkByName('企业版'))}
                   onKeyDown={handleModuleCardKeyDown(getExternalLinkByName('企业版'))}
-                  className="group relative h-[243px] w-full cursor-pointer overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[#F0EFE7] px-10 pt-10 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(141,99,70,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8D6346]/30 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent lg:w-[590px]"
+                  className="group relative h-[243px] w-full cursor-pointer overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[#F0EFE7] px-10 pt-10 transform-gpu transition-[transform,box-shadow] duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,box-shadow] hover:-translate-y-[3px] hover:shadow-[0_16px_34px_rgba(141,99,70,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8D6346]/30 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent lg:w-[590px]"
                 >
                 <div className="relative z-10">
                   <h3 className="font-['PingFang_SC','PingFang SC',sans-serif] text-[30px] font-medium leading-[40px] text-[#8D6346]">
@@ -1509,10 +1519,10 @@ function App() {
                     href={getExternalLinkByName('企业版')}
                     target="_blank"
                     rel="noreferrer"
-                    className="group mt-4 inline-flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-full bg-[#8D6346] px-4 py-3 font-['PingFang_SC','PingFang SC',sans-serif] text-[14px] font-medium leading-[14px] text-white transition-[transform,background-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] hover:shadow-[0_10px_24px_rgba(141,99,70,0.18)]"
+                    className="group mt-4 inline-flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-full bg-[#8D6346] px-4 py-3 font-['PingFang_SC','PingFang SC',sans-serif] text-[14px] font-medium leading-[14px] text-white transform-gpu transition-[transform,background-color,box-shadow] duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,box-shadow] hover:-translate-y-[1px] hover:shadow-[0_8px_20px_rgba(141,99,70,0.16)]"
                   >
                     <span className="text-[#FFFFFF]">立即体验</span>
-                    <span className="flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:ml-1 group-hover:w-4 group-hover:opacity-100">
+                    <span className="flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 transition-[width,margin,opacity] duration-[280ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:ml-1 group-hover:w-4 group-hover:opacity-100">
                       <svg
                         width="16"
                         height="16"
@@ -1531,18 +1541,18 @@ function App() {
                 </div>
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute right-0 bottom-[-2px] z-0 h-[177px] w-[241px] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-4px] group-hover:translate-y-[-4px] group-hover:scale-[1.02]"
+                  className="pointer-events-none absolute right-0 bottom-[-2px] z-0 h-[177px] w-[241px] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[-3px] group-hover:translate-y-[-3px] group-hover:scale-[1.015]"
                 >
-                  <div className="absolute left-[61px] top-0 h-[177px] w-[84px] rounded-t-[2px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-6px] group-hover:translate-y-[-6px]" />
-                  <div className="absolute left-[129px] top-[66px] h-[111px] w-[68px] rounded-t-[2px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[5px] group-hover:translate-y-[-10px]" />
+                  <div className="absolute left-[61px] top-0 h-[177px] w-[84px] rounded-t-[2px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[-4px] group-hover:translate-y-[-4px]" />
+                  <div className="absolute left-[129px] top-[66px] h-[111px] w-[68px] rounded-t-[2px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[4px] group-hover:translate-y-[-7px]" />
 
-                  <span className="absolute left-[81px] top-[31px] h-[2px] w-[44px] bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-5px] group-hover:translate-y-[-6px]" />
-                  <span className="absolute left-[81px] top-[51px] h-[2px] w-[44px] bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-5px] group-hover:translate-y-[-6px]" />
-                  <span className="absolute left-[81px] top-[71px] h-[2px] w-[22px] bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-5px] group-hover:translate-y-[-6px]" />
-                  <span className="absolute left-[147px] top-[96px] h-[2px] w-[32px] bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[4px] group-hover:translate-y-[-9px]" />
-                  <span className="absolute left-[147px] top-[116px] h-[2px] w-[22px] bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[4px] group-hover:translate-y-[-9px]" />
+                  <span className="absolute left-[81px] top-[31px] h-[2px] w-[44px] bg-[#8D6447] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[-4px] group-hover:translate-y-[-4px]" />
+                  <span className="absolute left-[81px] top-[51px] h-[2px] w-[44px] bg-[#8D6447] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[-4px] group-hover:translate-y-[-4px]" />
+                  <span className="absolute left-[81px] top-[71px] h-[2px] w-[22px] bg-[#8D6447] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[-4px] group-hover:translate-y-[-4px]" />
+                  <span className="absolute left-[147px] top-[96px] h-[2px] w-[32px] bg-[#8D6447] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[3px] group-hover:translate-y-[-6px]" />
+                  <span className="absolute left-[147px] top-[116px] h-[2px] w-[22px] bg-[#8D6447] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[3px] group-hover:translate-y-[-6px]" />
 
-                  <div className="absolute left-[1px] top-[123px] inline-flex items-center gap-[2px] rounded-[9.6px] border border-[#8D6346] bg-[#FDFCF5] px-2 py-1.5 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[8px] group-hover:translate-y-[-8px] group-hover:scale-[1.03]">
+                  <div className="absolute left-[1px] top-[123px] inline-flex items-center gap-[2px] rounded-[9.6px] border border-[#8D6346] bg-[#FDFCF5] px-2 py-1.5 transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[6px] group-hover:translate-y-[-6px] group-hover:scale-[1.02]">
                     <span className="inline-flex h-5 w-5 items-center justify-center">
                       <svg
                         width="20"
@@ -1585,7 +1595,7 @@ function App() {
                   aria-label="打开扣子开源"
                   onClick={handleModuleCardClick(getExternalLinkByName('扣子开源'))}
                   onKeyDown={handleModuleCardKeyDown(getExternalLinkByName('扣子开源'))}
-                  className="group relative h-[243px] w-full cursor-pointer overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f7f4eb_0%,#efede4_49%)] px-8 pt-9 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(141,99,70,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9C6D4C]/30 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent lg:w-[590px]"
+                  className="group relative h-[243px] w-full cursor-pointer overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f7f4eb_0%,#efede4_49%)] px-8 pt-9 transform-gpu transition-[transform,box-shadow] duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,box-shadow] hover:-translate-y-[3px] hover:shadow-[0_16px_34px_rgba(141,99,70,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9C6D4C]/30 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent lg:w-[590px]"
                 >
                 <div className="relative z-10 max-w-[510px]">
                   <h3 className="font-['Helvetica','Arial',sans-serif] text-[30px] font-medium leading-[40px] text-[#9c6d4c]">
@@ -1598,10 +1608,10 @@ function App() {
                     href={getExternalLinkByName('扣子开源')}
                     target="_blank"
                     rel="noreferrer"
-                    className="group mt-4 inline-flex items-center justify-center overflow-hidden whitespace-nowrap rounded-full bg-[#9c6d4c] px-4 py-3 text-[16px] font-medium leading-none text-white transition-[transform,background-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] hover:shadow-[0_10px_24px_rgba(141,99,70,0.2)]"
+                    className="group mt-4 inline-flex items-center justify-center overflow-hidden whitespace-nowrap rounded-full bg-[#9c6d4c] px-4 py-3 text-[16px] font-medium leading-none text-white transform-gpu transition-[transform,background-color,box-shadow] duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,box-shadow] hover:-translate-y-[1px] hover:shadow-[0_8px_20px_rgba(141,99,70,0.18)]"
                   >
                     <span className="text-[#FFFFFF]">立即体验</span>
-                    <span className="flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:ml-1 group-hover:w-4 group-hover:opacity-100">
+                    <span className="flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 transition-[width,margin,opacity] duration-[280ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:ml-1 group-hover:w-4 group-hover:opacity-100">
                       <svg
                         width="16"
                         height="16"
@@ -1623,7 +1633,7 @@ function App() {
                   className="pointer-events-none absolute right-0 bottom-0 z-0 h-[209px] w-[208px]"
                 >
                   <svg
-                    className="absolute left-[18px] top-[48px] h-[89px] w-[120px] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-8px] group-hover:translate-y-[-8px]"
+                    className="absolute left-[18px] top-[48px] h-[89px] w-[120px] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[-6px] group-hover:translate-y-[-6px]"
                     viewBox="0 0 120 89"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -1636,13 +1646,13 @@ function App() {
                     />
                   </svg>
 
-                  <div className="absolute left-0 top-0 h-12 w-[152px] rounded-[8px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-8px] group-hover:translate-y-[-8px]" />
-                  <div className="absolute left-0 top-32 h-12 w-[152px] rounded-[8px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[8px] group-hover:translate-y-[-3px]" />
+                  <div className="absolute left-0 top-0 h-12 w-[152px] rounded-[8px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[-6px] group-hover:translate-y-[-6px]" />
+                  <div className="absolute left-0 top-32 h-12 w-[152px] rounded-[8px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[6px] group-hover:translate-y-[-2px]" />
 
-                  <span className="absolute left-14 top-[23px] h-[2px] w-10 bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-8px] group-hover:translate-y-[-8px]" />
-                  <span className="absolute left-14 top-[151px] h-[2px] w-10 bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[8px] group-hover:translate-y-[-3px]" />
+                  <span className="absolute left-14 top-[23px] h-[2px] w-10 bg-[#8D6447] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[-6px] group-hover:translate-y-[-6px]" />
+                  <span className="absolute left-14 top-[151px] h-[2px] w-10 bg-[#8D6447] transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[6px] group-hover:translate-y-[-2px]" />
 
-                  <div className="absolute left-[29px] top-[72px] inline-flex items-center gap-[2px] rounded-[9.6px] border border-[#8D6346] bg-[#FDFCF5] px-2 py-1.5 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[4px] group-hover:translate-y-[-12px] group-hover:scale-[1.03]">
+                  <div className="absolute left-[29px] top-[72px] inline-flex items-center gap-[2px] rounded-[9.6px] border border-[#8D6346] bg-[#FDFCF5] px-2 py-1.5 transform-gpu will-change-transform transition-transform duration-[620ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[3px] group-hover:translate-y-[-8px] group-hover:scale-[1.02]">
                     <span className="inline-flex h-5 w-5 items-center justify-center">
                       <svg
                         width="20"
