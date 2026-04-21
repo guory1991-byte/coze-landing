@@ -1,0 +1,16 @@
+<svg width="336" height="336" viewBox="0 0 336 336" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="Repeat group 12_inner" data-figma-trr="r12p278.4-0f">
+<rect x="142.225" y="25.2882" width="1.20348" height="10.8313" transform="rotate(-10 142.225 25.2882)" fill="#8D6346" fill-opacity="0.16"/>
+</g>
+<use xlink:href="#Repeat%20group%2012_inner" transform="translate(106.508 -61.4924) rotate(30)"/>
+<use xlink:href="#Repeat%20group%2012_inner" transform="translate(229.492 -61.4924) rotate(60)"/>
+<use xlink:href="#Repeat%20group%2012_inner" transform="translate(336 -0.000191706) rotate(90)"/>
+<use xlink:href="#Repeat%20group%2012_inner" transform="translate(397.493 106.508) rotate(120)"/>
+<use xlink:href="#Repeat%20group%2012_inner" transform="translate(397.493 229.492) rotate(150)"/>
+<use xlink:href="#Repeat%20group%2012_inner" transform="translate(336 336) rotate(-180)"/>
+<use xlink:href="#Repeat%20group%2012_inner" transform="translate(229.493 397.492) rotate(-150)"/>
+<use xlink:href="#Repeat%20group%2012_inner" transform="translate(106.508 397.492) rotate(-120)"/>
+<use xlink:href="#Repeat%20group%2012_inner" transform="translate(0.000197046 336) rotate(-90)"/>
+<use xlink:href="#Repeat%20group%2012_inner" transform="translate(-61.4922 229.492) rotate(-60)"/>
+<use xlink:href="#Repeat%20group%2012_inner" transform="translate(-61.4922 106.508) rotate(-30)"/>
+</svg>

@@ -1,13 +1,38 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+  type ReactNode,
+} from 'react'
 
 import heroBottom from './assets/figma/hero-bottom.png'
 import cozeLogo from './assets/figma/coze-logo.png'
+import heroDownloadIcon from './assets/figma/hero-download-icon.svg'
+import heroDownloadQr from './assets/figma/hero-download-qr.png'
+import footerPoliceRecord from './assets/figma/footer-police-record.png'
 import heroPreview from './assets/figma/hero-cover.png'
 import mainFeatureAgentWorld from './assets/figma/main-feature-agent-world.jpg'
 import mainFeatureCozeDev from './assets/figma/main-feature-coze-dev.jpg'
 import mainFeatureSkillStore from './assets/figma/main-feature-skill-store.jpg'
 import mainFeatureVideoCreation from './assets/figma/main-feature-video-creation.jpg'
-import otherFeatureCompass from './assets/figma/other-feature-compass.png'
+import compassCozeTag from './assets/figma/compass-coze-tag.svg'
+import compassDialFill from './assets/figma/compass-dial-fill.png'
+import compassDialRing from './assets/figma/compass-dial-ring.svg'
+import compassFrame from './assets/figma/compass-frame.svg'
+import compassNeedle from './assets/figma/compass-needle.svg'
+import compassPromptTag from './assets/figma/compass-prompt-tag.svg'
+import compassSdkShadowOne from './assets/figma/compass-sdk-shadow-1.svg'
+import compassSdkShadowTwo from './assets/figma/compass-sdk-shadow-2.svg'
+import compassSdkTop from './assets/figma/compass-sdk-top.svg'
+import compassTicksLightOne from './assets/figma/compass-ticks-light-1.svg'
+import compassTicksLightTwo from './assets/figma/compass-ticks-light-2.svg'
+import compassTicksLightThree from './assets/figma/compass-ticks-light-3.svg'
+import compassTicksLightFour from './assets/figma/compass-ticks-light-4.svg'
+import compassTicksLightFive from './assets/figma/compass-ticks-light-5.svg'
+import compassTicksStrong from './assets/figma/compass-ticks-strong.svg'
 
 const topNavDropdowns = [
   {
@@ -38,6 +63,25 @@ const bottomNavigationGroups = [
     items: ['文档', '精选', '客户与解决方案'],
   },
 ] as const
+
+const SALES_CONTACT_URL =
+  'https://bytedance.larkoffice.com/docx/XJkIdcmbuodq2NxptOmcptdinKg'
+const namedExternalLinks: Record<string, string> = {
+  扣子: 'https://www.coze.cn/',
+  扣子编程: 'https://code.coze.cn/home',
+  扣子罗盘: 'https://loop.coze.cn/',
+  扣子开源: 'https://github.com/coze-dev',
+  企业版: 'https://www.volcengine.com/product/coze-pro',
+  部署方案: SALES_CONTACT_URL,
+  行业方案: SALES_CONTACT_URL,
+  文档: 'https://docs.coze.cn/',
+  精选: 'https://www.coze.cn/gallery',
+  客户与解决方案: SALES_CONTACT_URL,
+}
+
+function getExternalLinkByName(name: string) {
+  return namedExternalLinks[name]
+}
 
 type MainFeatureTab = {
   key: 'skill-store' | 'video-creation' | 'coze-dev' | 'agent-world'
@@ -194,9 +238,8 @@ const displayedFaqCards = [
   {
     question: '扣子跟其他Claw类产品比有哪些优势？',
     answer: [
-      `扣子的核心不同，在于为你打造一个通往 Agent World 的全能智能个体，核心优势：
-
-跨端执行：搭载云手机/云电脑，高效完成复杂任务
+      '扣子的核心不同，在于为你打造一个通往 Agent World 的全能智能个体，核心优势：',
+      `跨端执行：搭载云手机/云电脑，高效完成复杂任务
 专属认知：优化长期记忆，自动学习，无需反复调试
 生态互联：依托海量 Agent 生态，灵活装配专家技能
 原生创作：视频编辑、AI PPT 能力，一站式创意交付`,
@@ -207,6 +250,7 @@ const displayedFaqCards = [
 
 type InteractiveCtaButtonProps = {
   label: string
+  buttonClassName?: string
   labelClassName?: string
   variant: CtaVariant
   textClassName: string
@@ -215,6 +259,7 @@ type InteractiveCtaButtonProps = {
   hoverIcon?: ReactNode
   onFocus: () => void
   onBlur: () => void
+  href?: string
 }
 
 const ctaTransitionCurveClass =
@@ -462,6 +507,7 @@ function MainFeatureTabIcon({
 
 function InteractiveCtaButton({
   label,
+  buttonClassName,
   labelClassName,
   variant,
   textClassName,
@@ -470,19 +516,43 @@ function InteractiveCtaButton({
   hoverIcon,
   onFocus,
   onBlur,
+  href,
 }: InteractiveCtaButtonProps) {
   const variantClassName =
     variant === 'solid'
       ? 'bg-[#1c1917] text-white'
       : 'border border-[rgba(22,24,35,0.05)] bg-white text-[#161823]'
+  const labelColorClassName = variant === 'solid' ? 'text-[#FFFFFF]' : 'text-[#161823]'
+  const sharedClassName = `group inline-flex w-full min-w-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-full ${variantClassName} ${paddingClassName} ${textClassName} ${ctaTransitionCurveClass} ${buttonClassName ?? ''}`
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className={sharedClassName}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      >
+        <span className={`${labelColorClassName} ${labelClassName ?? ''}`}>{label}</span>
+        <span
+          className={`flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 ${ctaIconTransitionClass} group-hover:ml-0.5 group-hover:w-4 group-hover:opacity-100`}
+        >
+          <span className="hidden group-hover:inline-flex">
+            {hoverIcon ?? <CtaArrowIcon fill={iconFill} />}
+          </span>
+          <span className="inline-flex group-hover:hidden">
+            <CtaArrowIcon fill={iconFill} />
+          </span>
+        </span>
+      </a>
+    )
+  }
 
   return (
-    <button
-      className={`group inline-flex w-full min-w-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-full ${variantClassName} ${paddingClassName} ${textClassName} ${ctaTransitionCurveClass}`}
-      onFocus={onFocus}
-      onBlur={onBlur}
-    >
-      <span className={labelClassName}>{label}</span>
+    <button className={sharedClassName} onFocus={onFocus} onBlur={onBlur}>
+      <span className={`${labelColorClassName} ${labelClassName ?? ''}`}>{label}</span>
       <span
         className={`flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 ${ctaIconTransitionClass} group-hover:ml-0.5 group-hover:w-4 group-hover:opacity-100`}
       >
@@ -519,6 +589,24 @@ function SectionShell({
   )
 }
 
+function getStaggerTransitionStyle(
+  index: number,
+  baseDelay = 0,
+  stepDelay = 70,
+): CSSProperties {
+  return {
+    transitionDelay: `${baseDelay + index * stepDelay}ms`,
+  }
+}
+
+// Ring "stroke" thickness is controlled by the mask (8px) so it stays consistent regardless of scale.
+const compassCircleMaskStyle: CSSProperties = {
+  WebkitMaskImage:
+    'radial-gradient(circle at center, transparent calc(100% - 8px), #000 calc(100% - 8px), #000 100%)',
+  maskImage:
+    'radial-gradient(circle at center, transparent calc(100% - 8px), #000 calc(100% - 8px), #000 100%)',
+}
+
 function App() {
   const [activeHeaderCta, setActiveHeaderCta] = useState<HeaderCtaKey | null>(null)
   const [activeHeroCta, setActiveHeroCta] = useState<HeroCtaKey | null>(null)
@@ -531,7 +619,10 @@ function App() {
   const [isMainFeatureTextVisible, setIsMainFeatureTextVisible] = useState(true)
   const [isMainFeaturePlaceholderVisible, setIsMainFeaturePlaceholderVisible] =
     useState(true)
-  const [isHeroVideoPlaying, setIsHeroVideoPlaying] = useState(false)
+  const [isHeroVideoModalOpen, setIsHeroVideoModalOpen] = useState(false)
+  const [isMainFeaturesInView, setIsMainFeaturesInView] = useState(false)
+  const [isOtherFeaturesInView, setIsOtherFeaturesInView] = useState(false)
+  const [isFaqInView, setIsFaqInView] = useState(false)
   const mainFeatureTransitionTimeoutRef = useRef<number | null>(null)
   const mainFeatureTextTransitionTimeoutRef = useRef<number | null>(null)
   const mainFeaturePlaceholderTransitionTimeoutRef = useRef<number | null>(null)
@@ -540,11 +631,51 @@ function App() {
     Partial<Record<MainFeatureTabKey, HTMLSpanElement | null>>
   >({})
   const [mainFeatureIndicatorLeft, setMainFeatureIndicatorLeft] = useState(0)
-  const heroVideoSrc = ''
+  const heroVideoOverlayRef = useRef<HTMLDivElement | null>(null)
+  const heroVideoElementRef = useRef<HTMLVideoElement | null>(null)
+  const mainFeaturesSectionRef = useRef<HTMLDivElement | null>(null)
+  const otherFeaturesSectionRef = useRef<HTMLDivElement | null>(null)
+  const faqSectionRef = useRef<HTMLDivElement | null>(null)
+  const heroVideoSrc =
+    'https://lf-coze-web-cdn.coze.cn/obj/eden-cn/lm-lgvj/ljhwZthlaukjlkulzlp/space/%E6%89%A3%E5%AD%902.0%E5%8D%87%E7%BA%A7%E8%A7%86%E9%A2%91.mp4'
   const hasHeroVideo = heroVideoSrc.length > 0
   const activeMainFeatureContent = mainFeatureContent[displayedMainFeatureTab]
   const activeMainFeaturePlaceholderImage =
     mainFeaturePlaceholderImages[displayedMainFeatureTab]
+
+  const openExternalLink = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
+  const shouldIgnoreCardNavigationTarget = (target: EventTarget | null) =>
+    target instanceof Element && Boolean(target.closest('a, button'))
+
+  const handleModuleCardClick =
+    (url: string) => (event: ReactMouseEvent<HTMLDivElement>) => {
+      if (shouldIgnoreCardNavigationTarget(event.target)) {
+        return
+      }
+
+      openExternalLink(url)
+    }
+
+  const handleModuleCardKeyDown =
+    (url: string) => (event: ReactKeyboardEvent<HTMLDivElement>) => {
+      if (event.key !== 'Enter' && event.key !== ' ') {
+        return
+      }
+
+      event.preventDefault()
+      openExternalLink(url)
+    }
+
+  const closeHeroVideoModal = () => {
+    if (document.fullscreenElement) {
+      void document.exitFullscreen().catch(() => {})
+    }
+
+    setIsHeroVideoModalOpen(false)
+  }
 
   useEffect(() => {
     return () => {
@@ -557,6 +688,112 @@ function App() {
       if (mainFeaturePlaceholderTransitionTimeoutRef.current !== null) {
         window.clearTimeout(mainFeaturePlaceholderTransitionTimeoutRef.current)
       }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isHeroVideoModalOpen) {
+      return
+    }
+
+    const overlayElement = heroVideoOverlayRef.current
+    const videoElement = heroVideoElementRef.current
+
+    if (!overlayElement || !videoElement) {
+      return
+    }
+
+    const requestFullscreen = async () => {
+      try {
+        if (!document.fullscreenElement) {
+          await overlayElement.requestFullscreen()
+        }
+      } catch {
+        // Fall back to fixed overlay when Fullscreen API is unavailable.
+      }
+
+      void videoElement.play().catch(() => {})
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeHeroVideoModal()
+      }
+    }
+
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        setIsHeroVideoModalOpen(false)
+      }
+    }
+
+    requestFullscreen()
+    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+      videoElement.pause()
+    }
+  }, [isHeroVideoModalOpen])
+
+  useEffect(() => {
+    const sections = [
+      {
+        element: mainFeaturesSectionRef.current,
+        onVisible: () => setIsMainFeaturesInView(true),
+      },
+      {
+        element: otherFeaturesSectionRef.current,
+        onVisible: () => setIsOtherFeaturesInView(true),
+      },
+      {
+        element: faqSectionRef.current,
+        onVisible: () => setIsFaqInView(true),
+      },
+    ].filter(
+      (
+        item
+      ): item is {
+        element: HTMLDivElement
+        onVisible: () => void
+      } => Boolean(item.element)
+    )
+
+    if (sections.length === 0) {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return
+          }
+
+          const targetSection = sections.find(
+            (section) => section.element === entry.target
+          )
+
+          if (!targetSection) {
+            return
+          }
+
+          targetSection.onVisible()
+          observer.unobserve(entry.target)
+        })
+      },
+      {
+        threshold: 0.18,
+        rootMargin: '0px 0px -8% 0px',
+      }
+    )
+
+    sections.forEach((section) => observer.observe(section.element))
+
+    return () => {
+      observer.disconnect()
     }
   }, [])
 
@@ -608,13 +845,13 @@ function App() {
     mainFeatureTransitionTimeoutRef.current = window.setTimeout(() => {
       setDisplayedMainFeatureTab(tab)
       setIsMainFeatureContentVisible(true)
-    }, 120)
+    }, 80)
     mainFeatureTextTransitionTimeoutRef.current = window.setTimeout(() => {
       setIsMainFeatureTextVisible(true)
-    }, 150)
+    }, 100)
     mainFeaturePlaceholderTransitionTimeoutRef.current = window.setTimeout(() => {
       setIsMainFeaturePlaceholderVisible(true)
-    }, 180)
+    }, 120)
   }
 
   return (
@@ -651,12 +888,15 @@ function App() {
 
                     <div className="invisible absolute left-0 top-full z-[9999] mt-2 w-[168px] rounded-[8px] bg-white p-1 opacity-0 shadow-[0_12px_32px_rgba(0,0,0,0.08)] transition-all duration-150 group-hover:visible group-hover:opacity-100">
                       {menu.items.map((item) => (
-                        <button
+                        <a
                           key={item}
+                          href={getExternalLinkByName(item)}
+                          target="_blank"
+                          rel="noreferrer"
                           className="flex w-full items-center rounded-[6px] px-3 py-2 text-left text-[14px] font-normal leading-5 text-[#1f2329] transition-colors hover:bg-[#f4f4ef]"
                         >
                           {item}
-                        </button>
+                        </a>
                       ))}
                     </div>
                   </div>
@@ -675,6 +915,7 @@ function App() {
                     paddingClassName="px-4 py-3"
                     textClassName="text-[14px] font-medium leading-none"
                     iconFill="#1F2329"
+                    href={SALES_CONTACT_URL}
                     onFocus={() => setActiveHeaderCta('sales')}
                     onBlur={() => setActiveHeaderCta(null)}
                   />
@@ -690,6 +931,7 @@ function App() {
                     paddingClassName="px-4 py-3"
                     textClassName="text-[14px] font-medium leading-none"
                     iconFill="#FFFFFF"
+                    href={getExternalLinkByName('扣子')}
                     onFocus={() => setActiveHeaderCta('trial')}
                     onBlur={() => setActiveHeaderCta(null)}
                   />
@@ -700,7 +942,7 @@ function App() {
         </SectionShell>
 
         <SectionShell heightClass="h-[800px]">
-          <div className="relative h-full overflow-hidden">
+          <div className="relative h-full">
             <img
               src={heroBottom}
               alt=""
@@ -720,7 +962,7 @@ function App() {
                 </span>
               </div>
               <div className="mt-12 flex w-full justify-center">
-                <div className="flex w-full max-w-[272px] items-center gap-4">
+                <div className="flex w-full max-w-[272px] items-center gap-4 overflow-visible">
                   <div
                     className={`min-w-0 ${ctaFlexTransitionClass} ${getInteractiveCtaFlexClass(activeHeroCta, 'hero-trial')}`}
                     onMouseEnter={() => setActiveHeroCta('hero-trial')}
@@ -733,17 +975,19 @@ function App() {
                       paddingClassName="px-6 py-4"
                       textClassName="text-[20px] font-medium leading-none"
                       iconFill="#FFFFFF"
+                      href={getExternalLinkByName('扣子')}
                       onFocus={() => setActiveHeroCta('hero-trial')}
                       onBlur={() => setActiveHeroCta(null)}
                     />
                   </div>
                   <div
-                    className={`min-w-0 ${ctaFlexTransitionClass} ${getInteractiveCtaFlexClass(activeHeroCta, 'hero-download')}`}
+                    className={`group/hero-download relative z-40 min-w-0 ${ctaFlexTransitionClass} ${getInteractiveCtaFlexClass(activeHeroCta, 'hero-download')}`}
                     onMouseEnter={() => setActiveHeroCta('hero-download')}
                     onMouseLeave={() => setActiveHeroCta(null)}
                   >
                     <InteractiveCtaButton
                       label="立即下载"
+                      buttonClassName="font-['Helvetica','Arial',sans-serif]"
                       labelClassName="font-['Helvetica','Arial',sans-serif]"
                       variant="outline"
                       paddingClassName="px-6 py-4"
@@ -753,73 +997,137 @@ function App() {
                       onFocus={() => setActiveHeroCta('hero-download')}
                       onBlur={() => setActiveHeroCta(null)}
                     />
+                    <div className="pointer-events-none invisible absolute left-1/2 top-full z-40 mt-2 flex h-[208px] w-[176px] -translate-x-1/2 -translate-y-3 scale-[0.92] origin-top flex-col items-center gap-3 rounded-[8px] border border-[rgba(31,35,41,0.06)] bg-white p-2 opacity-0 shadow-[0_24px_48px_rgba(31,35,41,0.16),0_10px_24px_rgba(31,35,41,0.10)] transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/hero-download:pointer-events-auto group-hover/hero-download:visible group-hover/hero-download:translate-y-0 group-hover/hero-download:scale-100 group-hover/hero-download:opacity-100 group-focus-within/hero-download:pointer-events-auto group-focus-within/hero-download:visible group-focus-within/hero-download:translate-y-0 group-focus-within/hero-download:scale-100 group-focus-within/hero-download:opacity-100">
+                      <img
+                        src={heroDownloadQr}
+                        alt="扫码下载二维码"
+                        className="h-[160px] w-[160px] rounded-[6px] object-cover"
+                      />
+                      <div className="flex items-center justify-center gap-2">
+                        <img
+                          src={heroDownloadIcon}
+                          alt=""
+                          aria-hidden="true"
+                          className="h-5 w-5 shrink-0"
+                        />
+                        <p className="text-center text-[14px] font-medium leading-5 text-[#1F2329]">
+                          扫码下载
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
               <div className="relative mt-16 h-[430px] w-[764px] max-w-full rounded-[40px] border-[8px] border-[rgba(255,255,255,0.48)] shadow-[0_20px_60px_rgba(0,0,0,0.06)]">
                 <div className="relative h-full w-full overflow-hidden rounded-[32px] bg-[#0d1020]">
-                  {hasHeroVideo && isHeroVideoPlaying ? (
-                    <video
-                      className="h-full w-full object-cover"
-                      src={heroVideoSrc}
-                      poster={heroPreview}
-                      controls
-                      autoPlay
-                      playsInline
-                    />
-                  ) : (
-                    <>
-                      <img
-                        src={heroPreview}
-                        alt="Coze 视频封面"
-                        className="absolute inset-0 h-full w-full scale-[1.08] object-cover object-center"
-                      />
-                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,16,0.06)_0%,rgba(5,7,16,0.18)_100%)]" />
-                      <div className="absolute inset-0 z-10 flex items-center justify-center">
-                        <button
-                          type="button"
-                          aria-label="播放宣传视频"
-                          onClick={() => {
-                            if (hasHeroVideo) {
-                              setIsHeroVideoPlaying(true)
-                            }
-                          }}
-                          className="group flex h-24 w-24 items-center justify-center rounded-full bg-[rgba(0,0,0,0.32)] shadow-[0_12px_32px_rgba(0,0,0,0.16)] backdrop-blur-[24px] transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03] hover:bg-[rgba(0,0,0,0.38)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.22)] active:scale-[0.98] active:bg-[rgba(0,0,0,0.42)] active:shadow-[0_10px_24px_rgba(0,0,0,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent"
+                  <img
+                    src={heroPreview}
+                    alt="Coze 视频封面"
+                    className="absolute inset-0 h-full w-full scale-[1.08] object-cover object-center"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,16,0.06)_0%,rgba(5,7,16,0.18)_100%)]" />
+                  <div className="absolute inset-0 z-10 flex items-center justify-center">
+                    <button
+                      type="button"
+                      aria-label="播放宣传视频"
+                      onClick={() => {
+                        if (hasHeroVideo) {
+                          setIsHeroVideoModalOpen(true)
+                        }
+                      }}
+                      className="group flex h-24 w-24 items-center justify-center rounded-full bg-[rgba(0,0,0,0.32)] shadow-[0_12px_32px_rgba(0,0,0,0.16)] backdrop-blur-[24px] transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.03] hover:bg-[rgba(0,0,0,0.38)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.22)] active:scale-[0.98] active:bg-[rgba(0,0,0,0.42)] active:shadow-[0_10px_24px_rgba(0,0,0,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent"
+                    >
+                      <span className="translate-x-[3px] transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group-active:translate-x-[3px] group-active:scale-[0.96]">
+                        <svg
+                          width="36"
+                          height="39"
+                          viewBox="0 0 36 39"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          aria-hidden="true"
                         >
-                          <span className="translate-x-[3px] transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group-active:translate-x-[3px] group-active:scale-[0.96]">
-                            <svg
-                              width="36"
-                              height="39"
-                              viewBox="0 0 36 39"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                              aria-hidden="true"
-                            >
-                              <path
-                                d="M32.55 16.4684C34.8833 17.8155 34.8833 21.1845 32.55 22.5316L6.675 37.474C4.34167 38.8211 1.425 37.1366 1.425 34.4424V4.55762C1.425 1.86341 4.34167 0.178938 6.675 1.52604L32.55 16.4684Z"
-                                fill="#FFFFFF"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </div>
-                    </>
-                  )}
+                          <path
+                            d="M32.55 16.4684C34.8833 17.8155 34.8833 21.1845 32.55 22.5316L6.675 37.474C4.34167 38.8211 1.425 37.1366 1.425 34.4424V4.55762C1.425 1.86341 4.34167 0.178938 6.675 1.52604L32.55 16.4684Z"
+                            fill="#FFFFFF"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </SectionShell>
 
+        {isHeroVideoModalOpen ? (
+          <div
+            ref={heroVideoOverlayRef}
+            className="fixed inset-0 z-[20000] flex h-screen w-screen items-center justify-center bg-[rgba(0,0,0,0.92)]"
+          >
+            <button
+              type="button"
+              aria-label="关闭视频"
+              onClick={closeHeroVideoModal}
+              className="absolute right-6 top-6 z-[20010] inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/12 text-white transition-colors duration-200 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 5L15 15M15 5L5 15"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+
+            <video
+              ref={heroVideoElementRef}
+              className="h-full w-full bg-black object-contain"
+              src={heroVideoSrc}
+              poster={heroPreview}
+              controls
+              autoPlay
+              playsInline={false}
+            />
+          </div>
+        ) : null}
+
         <SectionShell heightClass="h-[788px]">
-          <div className="flex h-full flex-col pt-16">
-            <h2 className="font-cn-serif mx-auto text-center text-[40px] font-semibold leading-[40px] text-[#1f2329]">
-              无论什么办公场景，coze都擅长
+          <div
+            ref={mainFeaturesSectionRef}
+            className={`flex h-full origin-center flex-col pt-16 transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              isMainFeaturesInView
+                ? 'translate-y-0 scale-100 opacity-100'
+                : 'translate-y-2 scale-[0.985] opacity-90'
+            }`}
+          >
+            <h2
+              className={`font-cn-serif mx-auto text-center text-[40px] font-semibold leading-[40px] text-[#1f2329] transition-[transform,opacity,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                isMainFeaturesInView
+                  ? 'translate-y-0 opacity-100 blur-0'
+                  : 'translate-y-4 opacity-0 blur-[4px]'
+              }`}
+            >
+              任何办公场景，Coze都擅长
             </h2>
-            <div className="relative mt-12 h-[88px]">
+            <div
+              className={`relative mt-12 h-[88px] transition-[transform,opacity] delay-75 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                isMainFeaturesInView
+                  ? 'translate-y-0 opacity-100'
+                  : 'translate-y-5 opacity-0'
+              }`}
+            >
               <div className="absolute inset-x-0 bottom-0 h-px bg-[rgba(31,35,41,0.05)]" />
               <div ref={mainFeatureNavRef} className="grid h-full grid-cols-4 gap-6">
-                {mainFeatureTabs.map((tab) => {
+                {mainFeatureTabs.map((tab, tabIndex) => {
                   const isActive = activeMainFeatureTab === tab.key
 
                   return (
@@ -827,7 +1135,12 @@ function App() {
                       key={tab.key}
                       type="button"
                       onClick={() => handleMainFeatureTabChange(tab.key)}
-                      className="relative flex h-full flex-col items-center gap-2.5 text-center"
+                      className={`relative flex h-full flex-col items-center gap-2.5 text-center transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        isMainFeaturesInView
+                          ? 'translate-y-0 opacity-100'
+                          : 'translate-y-4 opacity-0'
+                      }`}
+                      style={getStaggerTransitionStyle(tabIndex, 120, 55)}
                     >
                       <MainFeatureTabIcon tab={tab.key} active={isActive} />
                       <span
@@ -866,7 +1179,11 @@ function App() {
             </div>
 
             <div
-              className={`mt-12 flex-1 rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f6f2ea_0%,#efede4_49%)] transition-all duration-200 ease-in-out ${
+              className={`mt-12 flex-1 rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f6f2ea_0%,#efede4_49%)] transition-[transform,opacity,box-shadow] delay-150 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                isMainFeaturesInView
+                  ? 'translate-y-0 scale-100 opacity-100 shadow-[0_12px_36px_rgba(141,99,70,0.04)]'
+                  : 'translate-y-6 scale-[0.99] opacity-0'
+              } ${
                 isMainFeatureContentVisible
                   ? 'opacity-100'
                   : 'opacity-0'
@@ -874,8 +1191,10 @@ function App() {
             >
               <div className="grid h-full gap-10 lg:grid-cols-[420px_1fr] lg:items-center">
                 <div
-                  className={`space-y-6 pt-2 transition-all duration-300 ease-in-out lg:mt-[128px] lg:self-start lg:pl-[60px] ${
-                    isMainFeatureTextVisible
+                  className={`space-y-3 pt-2 transition-opacity duration-500 ease-in-out lg:mt-[128px] lg:self-start lg:pl-[60px] ${
+                    isMainFeaturesInView ? 'translate-y-0' : 'translate-y-5'
+                  } ${
+                    isMainFeaturesInView && isMainFeatureTextVisible
                       ? 'opacity-100'
                       : 'opacity-0'
                   }`}
@@ -890,7 +1209,17 @@ function App() {
                   </div>
                   <div className="space-y-3 font-['Helvetica','Arial',sans-serif]">
                     {activeMainFeatureContent.bulletPoints.map((item, index) => (
-                      <div key={item} className="flex items-center gap-3 whitespace-nowrap">
+                      <div
+                        key={item}
+                        className={`flex items-center gap-3 whitespace-nowrap transition-opacity duration-450 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                          isMainFeaturesInView ? 'translate-y-0' : 'translate-y-4'
+                        } ${
+                          isMainFeaturesInView && isMainFeatureTextVisible
+                            ? 'opacity-100'
+                            : 'opacity-0'
+                        }`}
+                        style={getStaggerTransitionStyle(index, 80, 35)}
+                      >
                         <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center">
                           <svg
                             width="16"
@@ -927,11 +1256,12 @@ function App() {
                   </div>
                 </div>
                 <div
-                  className={`h-[406px] w-[640px] max-w-full rounded-[40px] border-[6px] border-[rgba(255,255,255,0.48)] shadow-[0_20px_60px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out lg:justify-self-end lg:mr-[48px] ${
-                    isMainFeaturePlaceholderVisible
-                      ? 'opacity-100'
-                      : 'opacity-0'
-                  }`}
+                  className={`h-[406px] w-[640px] max-w-full rounded-[40px] border-[6px] border-[rgba(255,255,255,0.48)] shadow-[0_20px_60px_rgba(0,0,0,0.06)] transition-opacity duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] lg:justify-self-end lg:mr-[48px] ${
+                    isMainFeaturesInView
+                      ? 'translate-x-0 translate-y-0'
+                      : 'translate-x-[10px] translate-y-8'
+                  } ${isMainFeaturesInView && isMainFeaturePlaceholderVisible ? 'opacity-100' : 'opacity-0'}`}
+                  style={getStaggerTransitionStyle(0, 260, 0)}
                 >
                   <div className="h-full w-full overflow-hidden rounded-[32px] bg-white/70">
                     <img
@@ -947,27 +1277,66 @@ function App() {
         </SectionShell>
 
         <SectionShell heightClass="h-[722px]">
-          <div className="flex h-full flex-col pt-16">
-            <h2 className="font-cn-serif mx-auto text-center text-[40px] font-semibold leading-[40px] text-[#1f2329]">
+          <div
+            ref={otherFeaturesSectionRef}
+            className={`flex h-full origin-center flex-col pt-16 transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              isOtherFeaturesInView
+                ? 'translate-y-0 scale-100 opacity-100'
+                : 'translate-y-2 scale-[0.985] opacity-90'
+            }`}
+          >
+            <h2
+              className={`font-cn-serif mx-auto text-center text-[40px] font-semibold leading-[40px] text-[#1f2329] transition-[transform,opacity,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                isOtherFeaturesInView
+                  ? 'translate-y-0 opacity-100 blur-0'
+                  : 'translate-y-4 opacity-0 blur-[4px]'
+              }`}
+            >
               全新扣子，全面强大
             </h2>
 
-            <div className="mt-12 grid gap-5 lg:grid-cols-[590px_590px] lg:grid-rows-[243px_243px] lg:justify-center">
-              <div className="relative h-[506px] w-full overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f7f4eb_0%,#efede4_49%)] px-8 pt-9 lg:row-span-2 lg:w-[590px]">
+            <div
+              className={`mt-12 grid gap-5 transition-[transform,opacity] delay-150 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] lg:grid-cols-[590px_590px] lg:grid-rows-[243px_243px] lg:justify-center ${
+                isOtherFeaturesInView
+                  ? 'translate-y-0 scale-100 opacity-100'
+                  : 'translate-y-5 scale-[0.99] opacity-0'
+              }`}
+            >
+              <div
+                className={`transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] lg:row-span-2 ${
+                  isOtherFeaturesInView
+                    ? 'translate-x-0 translate-y-0 opacity-100'
+                    : 'translate-x-[-10px] translate-y-8 opacity-0'
+                }`}
+                style={getStaggerTransitionStyle(0, 180, 90)}
+              >
+                <div
+                  role="link"
+                  tabIndex={0}
+                  aria-label="打开扣子罗盘"
+                  onClick={handleModuleCardClick(getExternalLinkByName('扣子罗盘'))}
+                  onKeyDown={handleModuleCardKeyDown(getExternalLinkByName('扣子罗盘'))}
+                  className="group relative h-[506px] w-full cursor-pointer overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f7f4eb_0%,#efede4_49%)] px-8 pt-9 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(141,99,70,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9C6D4C]/30 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent lg:w-[590px]"
+                >
                 <div className="relative z-10">
                   <div className="max-w-[510px]">
                   <h3 className="font-['Helvetica','Arial',sans-serif] text-[30px] font-medium leading-[40px] text-[#9c6d4c]">
                     扣子罗盘
                   </h3>
-                  <p className="mt-3 max-w-[510px] text-[14px] leading-[20px] text-[rgba(103,83,67,0.88)]">
+                  <p className="mt-3 max-w-[255px] text-[14px] leading-[20px] text-[rgba(103,83,67,0.88)]">
                     依托字节跳动企业级 AI 开发平台能力，为专业开发者提供从智能体构建到全生命周期管理的一站式解决方案，大幅提升 AI Agent 开发效率与质量
                   </p>
-                  <button className={`group mt-4 inline-flex items-center justify-center overflow-hidden whitespace-nowrap rounded-full bg-[#9c6d4c] px-4 py-3 text-[16px] font-medium leading-none text-white ${ctaTransitionCurveClass}`}>
-                    <span>立即体验</span>
-                    <span className={`flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 ${ctaIconTransitionClass} group-hover:ml-0.5 group-hover:w-3 group-hover:opacity-100`}>
+                  <a
+                    href={getExternalLinkByName('扣子罗盘')}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group mt-4 inline-flex items-center justify-center overflow-hidden whitespace-nowrap rounded-full bg-[#9c6d4c] px-4 py-3 text-[16px] font-medium leading-none text-white transition-[transform,background-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] hover:shadow-[0_10px_24px_rgba(141,99,70,0.2)]"
+                  >
+                    <span className="text-[#FFFFFF]">立即体验</span>
+                    <span className="flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:ml-1 group-hover:w-4 group-hover:opacity-100">
                       <svg
-                        width="12"
-                        height="12"
+                        width="16"
+                        height="16"
                         viewBox="0 0 12 12"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -979,32 +1348,174 @@ function App() {
                         />
                       </svg>
                     </span>
-                  </button>
+                  </a>
                 </div>
                 </div>
-                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                  <img
-                    src={otherFeatureCompass}
-                    alt="扣子罗盘功能示意图"
-                    className="max-h-full max-w-full object-contain object-center"
-                  />
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center"
+                >
+                  <div className="relative h-[280px] w-[420px] translate-y-[5px]">
+                    <img
+                      src={compassFrame}
+                      alt=""
+                      className="absolute z-10 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      style={{ left: '48px', top: '24px', width: '308px', height: '120px' }}
+                    />
+
+                    <img
+                      src={compassDialFill}
+                      alt=""
+                      className="absolute z-20 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px] group-hover:scale-[1.008]"
+                      style={{ left: '27.9px', top: '96.46px', width: '348px', height: '348px' }}
+                    />
+                    <img
+                      src={compassDialRing}
+                      alt=""
+                      className="absolute z-30 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-3px]"
+                      style={{ left: '55.5px', top: '125.3px', width: '292px', height: '292px' }}
+                    />
+                    <img
+                      src={compassTicksStrong}
+                      alt=""
+                      className="absolute z-40 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-3px]"
+                      style={{ left: '57.6px', top: '125.26px', width: '289.8px', height: '289.8px' }}
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute z-[45]"
+                      style={{ left: '55.5px', top: '125.3px', width: '292px', height: '292px' }}
+                    >
+                      <div
+                        className="absolute inset-0 rounded-full opacity-90"
+                        style={{
+                          ...compassCircleMaskStyle,
+                          background:
+                            'linear-gradient(180deg, rgba(232,183,149,0.42) 0%, rgba(156,109,76,0.18) 40%, rgba(141,99,70,0.10) 100%)',
+                        }}
+                      />
+                      <div
+                        className="absolute inset-0 origin-center rotate-[60deg] opacity-90 transition-[transform,clip-path,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] [clip-path:polygon(50%_50%,49%_0%,58%_1%,68%_5%,78%_12%,86%_22%,91%_34%,94%_46%,95%_56%,50%_50%)] group-hover:rotate-[-10deg] group-hover:opacity-100 group-hover:[clip-path:polygon(50%_50%,46%_0%,60%_1%,74%_6%,86%_15%,95%_28%,100%_43%,100%_57%,98%_68%,50%_50%)]"
+                        style={{
+                          ...compassCircleMaskStyle,
+                          background:
+                            'conic-gradient(from 270deg, rgba(232,183,149,0.58) 0deg, rgba(156,109,76,0.30) 52deg, rgba(141,99,70,0.12) 74deg, rgba(156,109,76,0) 102deg)',
+                        }}
+                      />
+                    </div>
+                    <img
+                      src={compassTicksLightOne}
+                      alt=""
+                      className="absolute z-[35] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      style={{ left: '45.85px', top: '113.21px', width: '313.31px', height: '313.31px' }}
+                    />
+                    <img
+                      src={compassTicksLightTwo}
+                      alt=""
+                      className="absolute z-[35] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      style={{ left: '34.99px', top: '102.35px', width: '335.03px', height: '335.03px' }}
+                    />
+                    <img
+                      src={compassTicksLightThree}
+                      alt=""
+                      className="absolute z-[35] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      style={{ left: '25.4px', top: '92.76px', width: '354.2px', height: '354.2px' }}
+                    />
+                    <img
+                      src={compassTicksLightFour}
+                      alt=""
+                      className="absolute z-[35] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      style={{ left: '17.16px', top: '84.53px', width: '370.67px', height: '370.67px' }}
+                    />
+                    <img
+                      src={compassTicksLightFive}
+                      alt=""
+                      className="absolute z-[35] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-2px]"
+                      style={{ left: '10.34px', top: '77.7px', width: '384.33px', height: '384.33px' }}
+                    />
+
+                    <img
+                      src={compassNeedle}
+                      alt=""
+                      className="absolute z-50 origin-[53.3%_49.7%] rotate-[60deg] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:rotate-[-10deg]"
+                      style={{ left: '123.65px', top: '197.23px', width: '159px', height: '141.03px' }}
+                    />
+
+                    <div
+                      className="absolute z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-[-6px] group-hover:scale-[1.02]"
+                      style={{ left: '165.9px', top: '-0.3px', width: '69px', height: '60.6px' }}
+                    >
+                      <img
+                        src={compassSdkShadowTwo}
+                        alt=""
+                        className="absolute left-0 top-[6px] z-20 h-[47.4px] w-[69px]"
+                      />
+                      <img
+                        src={compassSdkShadowOne}
+                        alt=""
+                        className="absolute left-0 top-[13.2px] z-10 h-[47.4px] w-[69px]"
+                      />
+                      <img
+                        src={compassSdkTop}
+                        alt=""
+                        className="absolute left-0 top-0 z-30 h-[47.4px] w-[69px]"
+                      />
+                      <span className="absolute left-[19.2px] top-[14.4px] z-40 font-['Helvetica','Arial',sans-serif] text-[14.4px] font-semibold leading-[17px] text-[#8D6346]">
+                        SDK
+                      </span>
+                    </div>
+
+                    <img
+                      src={compassPromptTag}
+                      alt=""
+                      className="absolute z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-6px] group-hover:translate-y-[-4px]"
+                      style={{ left: '-23px', top: '60px', width: '138px', height: '32px' }}
+                    />
+                    <img
+                      src={compassCozeTag}
+                      alt="扣子罗盘功能示意图"
+                      className="absolute z-[60] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[6px] group-hover:translate-y-[-4px]"
+                      style={{ left: '297px', top: '63px', width: '121px', height: '32px' }}
+                    />
+                  </div>
                 </div>
               </div>
+              </div>
 
-              <div className="relative h-[243px] w-full overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f7f4eb_0%,#efede4_49%)] px-8 pt-9 lg:w-[590px]">
-                <div className="relative z-10 max-w-[510px]">
-                  <h3 className="font-['Helvetica','Arial',sans-serif] text-[30px] font-medium leading-[40px] text-[#9c6d4c]">
+              <div
+                className={`transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  isOtherFeaturesInView
+                    ? 'translate-x-0 translate-y-0 opacity-100'
+                    : 'translate-x-[12px] translate-y-5 opacity-0'
+                }`}
+                style={getStaggerTransitionStyle(1, 180, 90)}
+              >
+                <div
+                  role="link"
+                  tabIndex={0}
+                  aria-label="打开扣子企业版"
+                  onClick={handleModuleCardClick(getExternalLinkByName('企业版'))}
+                  onKeyDown={handleModuleCardKeyDown(getExternalLinkByName('企业版'))}
+                  className="group relative h-[243px] w-full cursor-pointer overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[#F0EFE7] px-10 pt-10 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(141,99,70,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8D6346]/30 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent lg:w-[590px]"
+                >
+                <div className="relative z-10">
+                  <h3 className="font-['PingFang_SC','PingFang SC',sans-serif] text-[30px] font-medium leading-[40px] text-[#8D6346]">
                     扣子企业版
                   </h3>
-                  <p className="mt-3 max-w-[510px] text-[14px] leading-[20px] text-[rgba(103,83,67,0.88)]">
+                  <p className="mt-3 max-w-[255px] text-[14px] leading-[20px] text-[rgba(31,35,41,0.75)]">
                     在企业级安全环境与团队协作的深度融合场景下，高效的协同机制及丰富的功能矩阵，为企业打造了一套生产力解决方案。
                   </p>
-                  <button className={`group mt-4 inline-flex items-center justify-center overflow-hidden whitespace-nowrap rounded-full bg-[#9c6d4c] px-4 py-3 text-[16px] font-medium leading-none text-white ${ctaTransitionCurveClass}`}>
-                    <span>立即体验</span>
-                    <span className={`flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 ${ctaIconTransitionClass} group-hover:ml-0.5 group-hover:w-3 group-hover:opacity-100`}>
+                  <a
+                    href={getExternalLinkByName('企业版')}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group mt-4 inline-flex items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-full bg-[#8D6346] px-4 py-3 font-['PingFang_SC','PingFang SC',sans-serif] text-[14px] font-medium leading-[14px] text-white transition-[transform,background-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] hover:shadow-[0_10px_24px_rgba(141,99,70,0.18)]"
+                  >
+                    <span className="text-[#FFFFFF]">立即体验</span>
+                    <span className="flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:ml-1 group-hover:w-4 group-hover:opacity-100">
                       <svg
-                        width="12"
-                        height="12"
+                        width="16"
+                        height="16"
                         viewBox="0 0 12 12"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -1016,24 +1527,84 @@ function App() {
                         />
                       </svg>
                     </span>
-                  </button>
+                  </a>
+                </div>
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute right-0 bottom-[-2px] z-0 h-[177px] w-[241px] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-4px] group-hover:translate-y-[-4px] group-hover:scale-[1.02]"
+                >
+                  <div className="absolute left-[61px] top-0 h-[177px] w-[84px] rounded-t-[2px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-6px] group-hover:translate-y-[-6px]" />
+                  <div className="absolute left-[129px] top-[66px] h-[111px] w-[68px] rounded-t-[2px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[5px] group-hover:translate-y-[-10px]" />
+
+                  <span className="absolute left-[81px] top-[31px] h-[2px] w-[44px] bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-5px] group-hover:translate-y-[-6px]" />
+                  <span className="absolute left-[81px] top-[51px] h-[2px] w-[44px] bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-5px] group-hover:translate-y-[-6px]" />
+                  <span className="absolute left-[81px] top-[71px] h-[2px] w-[22px] bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-5px] group-hover:translate-y-[-6px]" />
+                  <span className="absolute left-[147px] top-[96px] h-[2px] w-[32px] bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[4px] group-hover:translate-y-[-9px]" />
+                  <span className="absolute left-[147px] top-[116px] h-[2px] w-[22px] bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[4px] group-hover:translate-y-[-9px]" />
+
+                  <div className="absolute left-[1px] top-[123px] inline-flex items-center gap-[2px] rounded-[9.6px] border border-[#8D6346] bg-[#FDFCF5] px-2 py-1.5 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[8px] group-hover:translate-y-[-8px] group-hover:scale-[1.03]">
+                    <span className="inline-flex h-5 w-5 items-center justify-center">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M2.7998 4.75316C2.7998 4.06448 3.24049 3.45306 3.89384 3.23527L8.98787 1.53726C9.64473 1.31831 10.3549 1.31831 11.0117 1.53726L16.1058 3.23527C16.7591 3.45305 17.1998 4.06448 17.1998 4.75317V11.0342C17.1998 13.3584 15.9397 15.5 13.9079 16.6288L10.3883 18.5841C10.1467 18.7183 9.85291 18.7183 9.61129 18.5841L6.09169 16.6288C4.05991 15.5 2.7998 13.3584 2.7998 11.0342V4.75316Z"
+                          fill="#8D6346"
+                        />
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M12.5108 7.45725C12.8232 7.14483 13.3297 7.14483 13.6422 7.45725C13.9546 7.76966 13.9546 8.2762 13.6422 8.58862L10.0587 12.1721C10.0464 12.1863 10.0335 12.2001 10.02 12.2136C9.70756 12.526 9.20103 12.526 8.88861 12.2136L6.96528 10.2903C6.65286 9.97786 6.65286 9.47133 6.96528 9.15891C7.2777 8.84649 7.78423 8.84649 8.09665 9.15891L9.45289 10.5152L12.5108 7.45725Z"
+                          fill="#FDFCF5"
+                        />
+                      </svg>
+                    </span>
+                    <span className="font-['PingFang_SC','PingFang SC',sans-serif] text-[14.4px] font-semibold leading-[20px] text-[#8D6346]">
+                      安全环境
+                    </span>
+                  </div>
                 </div>
               </div>
+              </div>
 
-              <div className="relative h-[243px] w-full overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f7f4eb_0%,#efede4_49%)] px-8 pt-9 lg:w-[590px]">
+              <div
+                className={`transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  isOtherFeaturesInView
+                    ? 'translate-x-0 translate-y-0 opacity-100'
+                    : 'translate-x-[16px] translate-y-6 opacity-0'
+                }`}
+                style={getStaggerTransitionStyle(2, 180, 90)}
+              >
+                <div
+                  role="link"
+                  tabIndex={0}
+                  aria-label="打开扣子开源"
+                  onClick={handleModuleCardClick(getExternalLinkByName('扣子开源'))}
+                  onKeyDown={handleModuleCardKeyDown(getExternalLinkByName('扣子开源'))}
+                  className="group relative h-[243px] w-full cursor-pointer overflow-hidden rounded-[24px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f7f4eb_0%,#efede4_49%)] px-8 pt-9 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(141,99,70,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9C6D4C]/30 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent lg:w-[590px]"
+                >
                 <div className="relative z-10 max-w-[510px]">
                   <h3 className="font-['Helvetica','Arial',sans-serif] text-[30px] font-medium leading-[40px] text-[#9c6d4c]">
                     扣子开源
                   </h3>
-                  <p className="mt-3 max-w-[510px] text-[14px] leading-[20px] text-[rgba(103,83,67,0.88)]">
+                  <p className="mt-3 max-w-[255px] text-[14px] leading-[20px] text-[rgba(103,83,67,0.88)]">
                     扣子 AI 开发与调试工具以开源之力，为你解锁私有化 AI 开发平台的无限可能，让 AI 开发更自主、更安全、更高效。
                   </p>
-                  <button className={`group mt-4 inline-flex items-center justify-center overflow-hidden whitespace-nowrap rounded-full bg-[#9c6d4c] px-4 py-3 text-[16px] font-medium leading-none text-white ${ctaTransitionCurveClass}`}>
-                    <span>立即体验</span>
-                    <span className={`flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 ${ctaIconTransitionClass} group-hover:ml-0.5 group-hover:w-3 group-hover:opacity-100`}>
+                  <a
+                    href={getExternalLinkByName('扣子开源')}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group mt-4 inline-flex items-center justify-center overflow-hidden whitespace-nowrap rounded-full bg-[#9c6d4c] px-4 py-3 text-[16px] font-medium leading-none text-white transition-[transform,background-color,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[1px] hover:shadow-[0_10px_24px_rgba(141,99,70,0.2)]"
+                  >
+                    <span className="text-[#FFFFFF]">立即体验</span>
+                    <span className="flex w-0 shrink-0 items-center justify-center overflow-hidden opacity-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:ml-1 group-hover:w-4 group-hover:opacity-100">
                       <svg
-                        width="12"
-                        height="12"
+                        width="16"
+                        height="16"
                         viewBox="0 0 12 12"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -1045,61 +1616,138 @@ function App() {
                         />
                       </svg>
                     </span>
-                  </button>
+                  </a>
                 </div>
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute right-0 bottom-0 z-0 h-[209px] w-[208px]"
+                >
+                  <svg
+                    className="absolute left-[18px] top-[48px] h-[89px] w-[120px] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-8px] group-hover:translate-y-[-8px]"
+                    viewBox="0 0 120 89"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0.600098 0V35.7755C0.600098 39.0892 3.28639 41.7755 6.6001 41.7755H112.6C115.914 41.7755 118.6 44.4618 118.6 47.7755V89"
+                      stroke="#8D6346"
+                      strokeOpacity="0.64"
+                      strokeWidth="1.2"
+                    />
+                  </svg>
+
+                  <div className="absolute left-0 top-0 h-12 w-[152px] rounded-[8px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-8px] group-hover:translate-y-[-8px]" />
+                  <div className="absolute left-0 top-32 h-12 w-[152px] rounded-[8px] border border-[rgba(141,99,70,0.32)] bg-[#F0EFE7] shadow-[inset_0_8px_12px_rgba(103,46,11,0.12)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[8px] group-hover:translate-y-[-3px]" />
+
+                  <span className="absolute left-14 top-[23px] h-[2px] w-10 bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[-8px] group-hover:translate-y-[-8px]" />
+                  <span className="absolute left-14 top-[151px] h-[2px] w-10 bg-[#8D6447] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[8px] group-hover:translate-y-[-3px]" />
+
+                  <div className="absolute left-[29px] top-[72px] inline-flex items-center gap-[2px] rounded-[9.6px] border border-[#8D6346] bg-[#FDFCF5] px-2 py-1.5 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[4px] group-hover:translate-y-[-12px] group-hover:scale-[1.03]">
+                    <span className="inline-flex h-5 w-5 items-center justify-center">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M9.99996 1.00049C5.08225 0.94817 1.05392 5.07629 1 10.2237C1.01863 14.2314 3.50367 17.7698 7.15275 18.9844C7.60275 19.07 7.76631 18.7874 7.76631 18.539V16.9718C5.26277 17.5285 4.7309 15.7387 4.7309 15.7387C4.56432 15.1769 4.20998 14.6966 3.73269 14.3856C2.91452 13.8204 3.79813 13.829 3.79813 13.829C4.081 13.8685 4.35162 13.9747 4.58968 14.1393C4.82774 14.3039 5.02706 14.5229 5.17267 14.7796C5.70096 15.7383 6.86558 16.0773 7.79096 15.5418C7.83661 15.0729 8.03948 14.636 8.3636 14.3086C6.36725 14.0773 4.27277 13.2894 4.27277 9.75265C4.25483 8.83016 4.58049 7.93652 5.18092 7.26059C4.90753 6.46846 4.93981 5.59609 5.27092 4.82843C5.60208 4.06086 6.03185 4.58007 7.7254 5.77047C9.19966 5.35933 10.7512 5.35933 12.2254 5.77047C13.9436 4.58007 14.68 4.82843 14.68 4.82843C15.0111 5.5961 15.0434 6.46847 14.77 7.26061C15.3843 7.92418 15.7276 8.8118 15.7272 9.7355C15.7272 13.2809 13.6164 14.0603 11.6364 14.2914C11.8532 14.5118 12.0207 14.7797 12.1268 15.0758C12.2328 15.372 12.2749 15.689 12.25 16.0041V18.5305C12.25 18.8302 12.4136 19.07 12.8636 18.9757C16.5018 17.7538 18.9775 14.2228 19 10.2237C18.9461 5.07629 14.9178 0.94817 9.99996 1.00049Z"
+                          fill="#8D6346"
+                        />
+                      </svg>
+                    </span>
+                    <span className="font-['PingFang_SC','PingFang SC',sans-serif] text-[14.4px] font-semibold leading-[20px] text-[#8D6346]">
+                      代码开源
+                    </span>
+                  </div>
+                </div>
+              </div>
               </div>
             </div>
           </div>
         </SectionShell>
 
-        <SectionShell heightClass="h-[568px]">
-          <div className="flex h-[568px] flex-col pt-4 pb-12">
-            <h2 className="font-cn-serif mx-auto text-center text-[40px] font-semibold leading-[40px] text-[#1f2329]">
+        <SectionShell heightClass="h-[552px]">
+          <div
+            ref={faqSectionRef}
+            className={`flex h-[552px] origin-center flex-col pt-4 pb-12 font-['Helvetica','Arial',sans-serif] transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              isFaqInView
+                ? 'translate-y-0 scale-100 opacity-100'
+                : 'translate-y-2 scale-[0.985] opacity-90'
+            }`}
+          >
+            <h2
+              className={`font-cn-serif mx-auto text-center text-[40px] font-semibold leading-[40px] text-[#1f2329] transition-[transform,opacity,filter] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                isFaqInView
+                  ? 'translate-y-0 opacity-100 blur-0'
+                  : 'translate-y-4 opacity-0 blur-[4px]'
+              }`}
+            >
               常见问题
             </h2>
-            <section className="mt-12 mb-[232px] grid flex-1 gap-x-5 gap-y-6 lg:grid-cols-3">
+            <section
+              className={`mt-12 mb-[232px] grid flex-1 gap-x-5 gap-y-6 transition-[transform,opacity] delay-150 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] lg:grid-cols-3 ${
+                isFaqInView
+                  ? 'translate-y-0 scale-100 opacity-100'
+                  : 'translate-y-5 scale-[0.99] opacity-0'
+              }`}
+            >
               {displayedFaqCards.map((item, cardIndex) => (
                 <div
                   key={`${item.question}-${cardIndex}`}
-                  className={`w-full justify-self-center rounded-[14px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f7f4eb_0%,#efede4_49%)] px-2 pt-5 pb-2 transition-shadow duration-200 hover:shadow-[0_12px_32px_rgba(31,35,41,0.12)] lg:w-[386px] ${
-                    cardIndex >= 3 ? 'h-[171px]' : 'h-[267px]'
+                  className={`transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isFaqInView
+                      ? 'translate-x-0 translate-y-0 opacity-100'
+                      : cardIndex % 3 === 1
+                        ? 'translate-y-7 opacity-0'
+                        : cardIndex % 3 === 2
+                          ? 'translate-x-[10px] translate-y-6 opacity-0'
+                          : 'translate-x-[-10px] translate-y-6 opacity-0'
                   }`}
+                  style={getStaggerTransitionStyle(cardIndex, 180, 70)}
                 >
-                  <div className="px-3 pt-0 text-[#9c6d4c]">
-                    <div className="flex items-start gap-2">
-                      <span className="shrink-0" aria-hidden="true">
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M10.4169 17.9091C8.70808 17.9091 7.27613 17.4545 6.12107 16.5455C4.95019 15.6212 4.29355 14.4091 4.15115 12.9091C3.9771 11.1515 3.95336 9.06061 4.07995 6.63636C4.15906 4.84849 4.77614 3.45455 5.9312 2.45455C7.03879 1.48485 8.53403 1 10.4169 1C12.3157 1 13.8425 1.48485 14.9976 2.45455C16.2001 3.45455 16.8409 4.84849 16.9201 6.63636C17.0466 9.06061 17.0229 11.1515 16.8489 12.9091C16.7223 14.197 16.2634 15.2576 15.4723 16.0909L16.7064 17.5L14.8315 19L13.4312 17.4091C12.5293 17.7424 11.5245 17.9091 10.4169 17.9091ZM10.4169 15.1818C10.8283 15.1515 11.1369 15.1136 11.3426 15.0682L9.96598 13.5227L11.9122 12.0455L13.3125 13.6364C13.4865 13.3182 13.6131 12.8939 13.6922 12.3636C13.8821 10.7121 13.9058 8.93182 13.7634 7.02273C13.6843 5.84091 13.3679 4.98485 12.8141 4.45455C12.2919 3.95455 11.4929 3.70455 10.4169 3.70455C9.45175 3.73485 8.70808 4.00758 8.18593 4.52273C7.61632 5.06818 7.29986 5.90152 7.23657 7.02273C7.12581 9.12879 7.14955 10.9091 7.30777 12.3636C7.51347 14.2424 8.54985 15.1818 10.4169 15.1818Z"
-                            fill="#8D6346"
-                          />
-                        </svg>
-                      </span>
-                      <p className="font-['Helvetica','Arial',sans-serif] text-[16px] font-medium leading-[20px]">
-                        {item.question}
-                      </p>
-                    </div>
-                  </div>
                   <div
-                    className={`mt-[18px] w-full rounded-[12px] bg-white/88 px-4 py-4 lg:w-[370px] ${
-                      cardIndex >= 3 ? 'h-[104px]' : 'h-[200px]'
+                    className={`w-full justify-self-center rounded-[14px] border border-[rgba(159,124,100,0.16)] bg-[linear-gradient(150deg,#f7f4eb_0%,#efede4_49%)] px-2 pt-5 pb-2 transition-shadow duration-200 hover:shadow-[0_12px_32px_rgba(31,35,41,0.12)] lg:w-[386px] ${
+                      cardIndex >= 3 ? 'h-[164px]' : 'h-[260px]'
                     }`}
                   >
-                    <div className="space-y-3">
-                      {item.answer.map((paragraph, index) => (
-                        <p
-                          key={`${item.question}-${index}`}
-                          className="whitespace-pre-line text-[14px] leading-[24px] text-[rgba(31,35,41,0.72)]"
-                        >
-                          {paragraph}
+                    <div className="px-3 pt-0 text-[#9c6d4c]">
+                      <div className="flex items-start gap-2">
+                        <span className="shrink-0" aria-hidden="true">
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M10.4169 17.9091C8.70808 17.9091 7.27613 17.4545 6.12107 16.5455C4.95019 15.6212 4.29355 14.4091 4.15115 12.9091C3.9771 11.1515 3.95336 9.06061 4.07995 6.63636C4.15906 4.84849 4.77614 3.45455 5.9312 2.45455C7.03879 1.48485 8.53403 1 10.4169 1C12.3157 1 13.8425 1.48485 14.9976 2.45455C16.2001 3.45455 16.8409 4.84849 16.9201 6.63636C17.0466 9.06061 17.0229 11.1515 16.8489 12.9091C16.7223 14.197 16.2634 15.2576 15.4723 16.0909L16.7064 17.5L14.8315 19L13.4312 17.4091C12.5293 17.7424 11.5245 17.9091 10.4169 17.9091ZM10.4169 15.1818C10.8283 15.1515 11.1369 15.1136 11.3426 15.0682L9.96598 13.5227L11.9122 12.0455L13.3125 13.6364C13.4865 13.3182 13.6131 12.8939 13.6922 12.3636C13.8821 10.7121 13.9058 8.93182 13.7634 7.02273C13.6843 5.84091 13.3679 4.98485 12.8141 4.45455C12.2919 3.95455 11.4929 3.70455 10.4169 3.70455C9.45175 3.73485 8.70808 4.00758 8.18593 4.52273C7.61632 5.06818 7.29986 5.90152 7.23657 7.02273C7.12581 9.12879 7.14955 10.9091 7.30777 12.3636C7.51347 14.2424 8.54985 15.1818 10.4169 15.1818Z"
+                              fill="#8D6346"
+                            />
+                          </svg>
+                        </span>
+                        <p className="font-['Helvetica','Arial',sans-serif] text-[16px] font-medium leading-[20px]">
+                          {item.question}
                         </p>
-                      ))}
+                      </div>
+                    </div>
+                    <div
+                      className={`mt-[18px] w-full rounded-[12px] bg-white/88 px-4 pt-3 pb-3 lg:w-[370px] ${
+                        cardIndex >= 3 ? 'h-[96px]' : 'h-[192px]'
+                      }`}
+                    >
+                      <div className="space-y-3">
+                        {item.answer.map((paragraph, index) => (
+                          <p
+                            key={`${item.question}-${index}`}
+                            className="whitespace-pre-line text-[14px] leading-[24px] text-[rgba(31,35,41,0.72)]"
+                          >
+                            {paragraph}
+                          </p>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1123,7 +1771,7 @@ function App() {
               </p>
               <div className="flex w-[220px] items-center gap-2 pt-6">
                 <div
-                  className={`min-w-0 ${ctaFlexTransitionClass} ${getInteractiveCtaFlexClass(activeBottomCta, 'bottom-download')}`}
+                  className={`group/bottom-download relative z-40 min-w-0 ${ctaFlexTransitionClass} ${getInteractiveCtaFlexClass(activeBottomCta, 'bottom-download')}`}
                   onMouseEnter={() => setActiveBottomCta('bottom-download')}
                   onMouseLeave={() => setActiveBottomCta(null)}
                 >
@@ -1137,6 +1785,24 @@ function App() {
                     onFocus={() => setActiveBottomCta('bottom-download')}
                     onBlur={() => setActiveBottomCta(null)}
                   />
+                  <div className="pointer-events-none invisible absolute bottom-full left-1/2 z-40 mb-[6px] flex h-[208px] w-[176px] -translate-x-1/2 -translate-y-3 scale-[0.92] origin-bottom flex-col items-center gap-3 rounded-[8px] border border-[rgba(31,35,41,0.06)] bg-white p-2 opacity-0 shadow-[0_24px_48px_rgba(31,35,41,0.16),0_10px_24px_rgba(31,35,41,0.10)] transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/bottom-download:pointer-events-auto group-hover/bottom-download:visible group-hover/bottom-download:translate-y-0 group-hover/bottom-download:scale-100 group-hover/bottom-download:opacity-100 group-focus-within/bottom-download:pointer-events-auto group-focus-within/bottom-download:visible group-focus-within/bottom-download:translate-y-0 group-focus-within/bottom-download:scale-100 group-focus-within/bottom-download:opacity-100">
+                    <img
+                      src={heroDownloadQr}
+                      alt="扫码下载二维码"
+                      className="h-[160px] w-[160px] rounded-[6px] object-cover"
+                    />
+                    <div className="flex items-center justify-center gap-2">
+                      <img
+                        src={heroDownloadIcon}
+                        alt=""
+                        aria-hidden="true"
+                        className="h-5 w-5 shrink-0"
+                      />
+                      <p className="text-center text-[14px] font-medium leading-5 text-[#1F2329]">
+                        扫码下载
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 <div
                   className={`min-w-0 ${ctaFlexTransitionClass} ${getInteractiveCtaFlexClass(activeBottomCta, 'bottom-trial')}`}
@@ -1149,6 +1815,7 @@ function App() {
                     paddingClassName="px-4 py-3"
                     textClassName="h-[38px] text-[14px] font-medium leading-[14px]"
                     iconFill="#FFFFFF"
+                    href={getExternalLinkByName('扣子')}
                     onFocus={() => setActiveBottomCta('bottom-trial')}
                     onBlur={() => setActiveBottomCta(null)}
                   />
@@ -1171,15 +1838,17 @@ function App() {
                     }`}
                   >
                     {group.items.map((item) => (
-                      <button
+                      <a
                         key={item}
-                        type="button"
+                        href={getExternalLinkByName(item)}
+                        target="_blank"
+                        rel="noreferrer"
                         className={`block text-[14px] leading-[20px] text-[rgba(31,35,41,1)] transition-all hover:text-[#1f2329] hover:underline hover:decoration-current hover:underline-offset-[3px] ${
                           group.label === '产品' && item === '扣子开源' ? 'h-[20px]' : ''
                         }`}
                       >
                         {item}
-                      </button>
+                      </a>
                     ))}
                   </div>
                 </div>
@@ -1194,48 +1863,28 @@ function App() {
               aria-hidden="true"
               className="pointer-events-none absolute left-1/2 top-0 -z-10 h-full w-screen -translate-x-1/2 bg-[#F0EFE7]"
             />
-            <div className="flex h-full items-center justify-between gap-6 text-[12px] leading-[20px] text-[rgba(31,35,41,0.56)]">
-              <img src={cozeLogo} alt="扣子" className="h-8 w-auto shrink-0" />
+            <div className="mx-auto flex h-full w-full max-w-[1200px] items-center justify-between">
+              <img
+                src={cozeLogo}
+                alt="扣子"
+                className="h-8 w-[78px] shrink-0 object-contain"
+              />
 
-              <div className="flex flex-1 items-center justify-end gap-6 whitespace-nowrap">
+              <div className="flex items-center gap-6 whitespace-nowrap font-['PingFang_SC','PingFang SC',sans-serif] text-[12px] font-medium leading-4 text-[#888B96]">
                 <span>北京春田知韵科技有限公司 | 营业执照</span>
-                <span className="flex items-center gap-1.5">
-                  <span
+                <span className="flex items-center gap-[3px]">
+                  <img
+                    src={footerPoliceRecord}
+                    alt=""
                     aria-hidden="true"
-                    className="flex h-4 w-4 items-center justify-center shrink-0"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle cx="8" cy="8.8" r="5.2" fill="#D93A32" />
-                      <path
-                        d="M8 1.4L9.05 3.38L11.3 3.78L9.72 5.36L10.05 7.58L8 6.56L5.95 7.58L6.28 5.36L4.7 3.78L6.95 3.38L8 1.4Z"
-                        fill="#F5C451"
-                      />
-                      <path
-                        d="M8 5.5C9.55 5.5 10.8 6.75 10.8 8.3C10.8 9.85 9.55 11.1 8 11.1C6.45 11.1 5.2 9.85 5.2 8.3C5.2 6.75 6.45 5.5 8 5.5Z"
-                        fill="#F5C451"
-                      />
-                      <path
-                        d="M4.15 11.35C4.83 12.61 6.2 13.5 8 13.5C9.8 13.5 11.17 12.61 11.85 11.35"
-                        stroke="#2F8F46"
-                        strokeWidth="1"
-                        strokeLinecap="round"
-                      />
-                      <path
-                        d="M8 6.85L8.52 7.94L9.7 8.09L8.84 8.92L9.05 10.08L8 9.5L6.95 10.08L7.16 8.92L6.3 8.09L7.48 7.94L8 6.85Z"
-                        fill="#D93A32"
-                      />
-                    </svg>
+                    className="h-[15px] w-[14px] shrink-0 object-contain"
+                  />
+                  <span>
+                    京公网安备11010802044261号
                   </span>
-                  <span>京公网安备11010802044261号</span>
                 </span>
                 <span>京ICP备2023020373号-4</span>
-                <span>© 2025 Coze. 版权所有</span>
+                <span>@2025 Coze. 版权所有</span>
               </div>
             </div>
           </div>
